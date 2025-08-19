@@ -6,8 +6,56 @@
     <title>Apex Legends Roulette</title>
     <meta name="csrf-token" content="{{ csrf_token() }}">
     <link rel="stylesheet" href="{{ asset('css/roulette.css') }}">
+    <link rel="stylesheet" href="{{ asset('css/auth.css') }}">
 </head>
 <body>
+    <!-- Navigation Header -->
+    <nav class="nav-header">
+        <div class="nav-container">
+            <div class="nav-brand">🎯 Apex Legends Roulette</div>
+            
+            <div class="nav-user">
+                @auth
+                    <div class="user-info">
+                        @if(Auth::user()->profile_image)
+                            <img src="{{ Storage::url(Auth::user()->profile_image) }}" 
+                                 alt="Profilbild" 
+                                 class="user-avatar">
+                        @else
+                            <div class="user-avatar-placeholder">
+                                {{ substr(Auth::user()->name, 0, 1) }}
+                            </div>
+                        @endif
+                        <span class="user-name">{{ Auth::user()->name }}</span>
+                    </div>
+                    
+                    <form action="{{ route('logout') }}" method="POST" class="inline">
+                        @csrf
+                        <button type="submit" class="nav-button danger">
+                            Abmelden
+                        </button>
+                    </form>
+                @else
+                    <div class="nav-buttons">
+                        <a href="{{ route('login') }}" class="nav-button primary">
+                            Anmelden
+                        </a>
+                        <a href="{{ route('register') }}" class="nav-button success">
+                            Registrieren
+                        </a>
+                    </div>
+                @endauth
+            </div>
+        </div>
+    </nav>
+
+    <!-- Success Message -->
+    @if(session('success'))
+        <div class="success-message">
+            {{ session('success') }}
+        </div>
+    @endif
+
     <div class="container">
         <div class="header">
             <h1>🎯 Apex Legends Roulette</h1>
